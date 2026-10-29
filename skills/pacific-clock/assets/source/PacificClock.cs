@@ -20,7 +20,7 @@ public class ClockSettings
     public bool ClickThrough = false;
     public bool TwelveHour = false;
     public bool Seconds = false;
-    public bool OrdinaryWindow = true;
+    public bool OrdinaryWindow = false;
     public double Opacity = 1;
     public double Zoom = 1;
     public string Theme = "Paper";
@@ -765,6 +765,7 @@ internal sealed class ClockForm : Form
         ClockSettings value = new ClockSettings { Opacity = 1, ClickThrough = true, Compact = true };
         using (ClockForm form = new ClockForm(value, true))
         {
+            check(!value.OrdinaryWindow && value.Compact, "fresh install defaults to compact floating mode");
             int style = GetWindowLong(form.Handle, -20);
             check((style & WS_EX_NOACTIVATE) != 0 && (style & WS_EX_TOOLWINDOW) != 0 && !form.ShowInTaskbar,
                 "nonactivating tool window / no taskbar button");

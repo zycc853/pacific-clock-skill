@@ -20,7 +20,9 @@ Resolve paths relative to this skill directory; never use a path from the author
 
 Some Windows agent shells run on a desktop such as `CodexSandboxDesktop-*` while the user sees `Default`. A GUI started there can run successfully and remain invisible to the user.
 
-`scripts/start.ps1` detects this difference. When its result says `requires-interactive-launch`, use the environment's native desktop launcher with `finderPath`; do not keep relaunching from the same shell. `FindPacificClock.exe` opens or restores the widget, switches it to a discoverable taskbar mode, and centers it on the mouse's monitor. It exits quickly, so the launcher may report no window for the finder itself: verify the resulting **PacificClock.exe** window instead.
+`scripts/start.ps1` detects this difference. When its result says `requires-interactive-launch`, use the environment's native desktop launcher with `appPath`; do not keep relaunching from the same shell. The default widget deliberately has no taskbar button, so some desktop launch tools may not return a targetable window. Never treat that response alone as a launch failure or repeatedly open a finder.
+
+Use `finderPath` only when the user needs to locate an invisible window or explicitly requests ordinary window mode. `FindPacificClock.exe` restores the widget, temporarily enables taskbar mode, and centers it on the mouse's monitor. It exits quickly: inspect **PacificClock.exe**, not the finder. Explain the taskbar-mode change and use **恢复悬浮模式** afterward if the user wants tray-only presence.
 
 If no interactive launch capability is available, give the user the prepared `finderPath` to double-click and state that the files are ready, rather than claiming it is visible.
 
@@ -29,7 +31,8 @@ If no interactive launch capability is available, give the user the prepared `fi
 - Drag the middle of the clock to move it. Right-click, or use the full card's `···` button, for settings.
 - **缩放比例** offers 50–200% presets. Drag any edge or corner to resize continuously while keeping the aspect ratio. Size and position are saved. Disable mouse click-through before dragging.
 - **外观主题** switches between warm Paper and dark Graphite. **精简模式** uses a small pill.
-- **恢复悬浮模式** hides the taskbar button and avoids taking keyboard focus. **普通窗口模式** makes the widget discoverable in the taskbar again.
+- A fresh install starts in compact floating mode: the clock stays visible on the desktop, with no main taskbar button and a notification-area tray icon. Do not change an existing user's saved preferences without their request.
+- **恢复悬浮模式** hides the taskbar button and avoids taking keyboard focus. **普通窗口模式** makes the widget discoverable in the taskbar again. Windows decides whether the tray icon is in the hidden-icons popup.
 - Mouse click-through can be disabled from the tray menu or by running `FindPacificClock.exe`.
 - Startup is opt-in. Do not enable it unless the user asks or selects it themselves. No system timezone change is needed.
 

@@ -2,11 +2,11 @@
 
 ## Clock is running but not visible
 
-The first check is **which desktop launched it**, not the process count. Run `scripts/start.ps1`: it returns desktop names and `requires-interactive-launch` when the shell is isolated from the user's desktop. Use the native app-launch capability on `finderPath`, or have the user double-click it on their machine. A cloud host cannot launch a GUI on the user's local machine.
+The first check is **which desktop launched it**, not the process count. Run `scripts/start.ps1`: it returns desktop names and `requires-interactive-launch` when the shell is isolated from the user's desktop. Use the native app-launch capability on `appPath` for normal startup. Floating mode has no taskbar button and may not expose a targetable window to the launch tool. Use `finderPath` only for actual recovery, because it changes the display mode. A cloud host cannot launch a GUI on the user's local machine.
 
 The finder returns immediately after sending a request to the clock. A launcher may therefore say that the finder has no targetable window. Look for the child/existing **PacificClock.exe** window, titled `太平洋时钟 · Pacific Clock`.
 
-`FindPacificClock.exe` restores a minimized/hidden window, disables click-through, centers it, and enables a taskbar button. The tray icon may be inside Windows' hidden-icons area. Floating mode deliberately omits a taskbar button.
+`FindPacificClock.exe` restores a minimized/hidden window, disables click-through, centers it, and enables a taskbar button. Select **恢复悬浮模式** afterward to hide that button again. Fresh installs default to compact floating mode. The tray icon may be inside Windows' hidden-icons area; its placement is controlled by Windows.
 
 ## Settings and updates
 
@@ -16,7 +16,7 @@ For a fresh copy, `prepare.ps1 -DestinationPath <new-directory>` copies only the
 
 ## Build and verification
 
-Run `scripts/build.ps1 -OutputDirectory <build-directory>` then `scripts/verify.ps1 -ExecutablePath <build-directory>\PacificClock.exe`. Verification has a 30-second timeout. The app's 17 checks cover PST/PDT offsets, spring and autumn boundaries, midnight rollover, placement, settings serialization, mouse passthrough, and ordinary/floating window styles. Offscreen preview generation is available as `PacificClock.exe --preview <absolute-png-path>`.
+Run `scripts/build.ps1 -OutputDirectory <build-directory>` then `scripts/verify.ps1 -ExecutablePath <build-directory>\PacificClock.exe`. Verification has a 30-second timeout. The app's 27 checks cover PST/PDT offsets, spring and autumn boundaries, midnight rollover, placement, settings serialization, mouse passthrough, ordinary/floating window styles, resizing, live button painting and fresh-install defaults. Offscreen preview generation is available as `PacificClock.exe --preview <absolute-png-path>`.
 
 Always keep the UTC instant when determining daylight status. Converting to a local 01:xx first makes the autumn repeated hour ambiguous. The clock uses `TimeZoneInfo.IsDaylightSavingTime(DateTimeOffset)` for its PDT/PST label.
 
