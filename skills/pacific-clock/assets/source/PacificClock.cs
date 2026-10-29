@@ -292,7 +292,7 @@ internal sealed class ClockForm : Form
     private void ApplySize()
     {
         scale = dpiScale * (float)NormalizeZoom(settings.Zoom);
-        ClientSize = settings.Compact ? new Size(S(settings.Seconds ? 244 : 204), S(54)) : new Size(S(286), S(160));
+        ClientSize = settings.Compact ? new Size(S(settings.Seconds ? 202 : 170), S(54)) : new Size(S(248), S(160));
         optionsButton.Visible = !settings.Compact;
         optionsButton.SetBounds(Width - S(49), S(11), S(36), S(32));
         using (GraphicsPath path = Rounded(new Rectangle(0, 0, Width, Height), S(settings.Compact ? 19 : 22)))
@@ -328,23 +328,23 @@ internal sealed class ClockForm : Form
         string suffix = settings.TwelveHour ? pacific.ToString("tt", Program.English) : Program.ZoneLabel(currentUtc);
         if (settings.Compact)
         {
-            FillRound(g, new Rectangle(S(10), S(11), S(32), S(32)), 11, Badge);
+            FillRound(g, new Rectangle(S(10), S(11), S(30), S(32)), 11, Badge);
             Draw(g, "PT", 17, 21, 11, FontStyle.Bold, Accent);
-            DrawTime(g, time, 53, 6, settings.Seconds ? 31 : 34);
-            Draw(g, suffix, settings.Seconds ? 207 : 167, 23, 10, FontStyle.Bold, Muted);
+            DrawTime(g, time, 49, 6, settings.Seconds ? 31 : 34);
+            Draw(g, suffix, settings.Seconds ? 167 : 135, 23, 10, FontStyle.Bold, Muted);
         }
         else
         {
             DrawSpaced(g, "PACIFIC", 24, 22, 11, 2.1f, Muted);
-            FillRound(g, new Rectangle(S(153), S(18), S(39), S(22)), 7, Badge);
-            Draw(g, Program.ZoneLabel(currentUtc), 162, 23, 10, FontStyle.Bold, Accent);
-            DrawTime(g, time, 20, settings.Seconds ? 54 : 42, settings.Seconds ? 43 : 60);
-            DrawAnalog(g, pacific, 243, 80, 20);
-            if (settings.TwelveHour) Draw(g, suffix, 233, 105, 10, FontStyle.Bold, Muted);
+            FillRound(g, new Rectangle(S(130), S(18), S(39), S(22)), 7, Badge);
+            Draw(g, Program.ZoneLabel(currentUtc), 139, 23, 10, FontStyle.Bold, Accent);
+            DrawTime(g, time, 20, settings.Seconds ? 54 : 40, settings.Seconds ? 43 : 64);
+            DrawAnalog(g, pacific, 206, 80, 16);
+            if (settings.TwelveHour) Draw(g, suffix, 196, 103, 10, FontStyle.Bold, Muted);
             using (Pen line = new Pen(Edge, scale)) g.DrawLine(line, S(24), S(123), Width - S(24), S(123));
             string offset = Program.Pacific.GetUtcOffset(new DateTimeOffset(currentUtc)).TotalHours.ToString("+0;-0;0", CultureInfo.InvariantCulture);
             DrawSpaced(g, pacific.ToString("ddd, MMM dd", Program.English).ToUpperInvariant(), 24, 136, 10, 0.8f, Muted);
-            Draw(g, "UTC" + offset, 225, 136, 10, FontStyle.Regular, Muted);
+            Draw(g, "UTC" + offset, 187, 136, 10, FontStyle.Regular, Muted);
         }
     }
 
@@ -786,7 +786,7 @@ internal sealed class ClockForm : Form
             check(value.ClickThrough && (style & WS_EX_TRANSPARENT) != 0 && (style & 0x80000) != 0,
                 "menu re-enables layered click-through");
             compact.PerformClick();
-            check(!value.Compact && form.Width == form.S(286) && form.Height == form.S(160),
+            check(!value.Compact && form.Width == form.S(248) && form.Height == form.S(160),
                 "compact menu switches actual window dimensions");
             form.ShowLocator();
             style = GetWindowLong(form.Handle, -20);
@@ -799,7 +799,7 @@ internal sealed class ClockForm : Form
             value.Compact = true;
             value.Zoom = 0.5;
             form.ApplySize();
-            check(form.Width == (int)Math.Round(102 * form.dpiScale) && form.Height == (int)Math.Round(27 * form.dpiScale),
+            check(form.Width == (int)Math.Round(85 * form.dpiScale) && form.Height == (int)Math.Round(27 * form.dpiScale),
                 "50 percent compact scales both window dimensions");
             check(form.ResizeEdgesAt(new Point(form.Width - 2, form.Height / 2)) == 2
                 && form.ResizeEdgesAt(new Point(form.Width / 2, form.Height / 2)) == 0,
@@ -827,7 +827,7 @@ internal sealed class ClockForm : Form
                 "drag zoom lower limit and corrupt scale recovery");
             value.Seconds = true;
             form.ApplySize();
-            check(form.Width == form.S(244) && value.Zoom == 0.5, "seconds layout retains zoom");
+            check(form.Width == form.S(202) && value.Zoom == 0.5, "seconds layout retains zoom");
             using (StringReader oldSettings = new StringReader("<ClockSettings><Compact>true</Compact></ClockSettings>"))
                 check(((ClockSettings)new XmlSerializer(typeof(ClockSettings)).Deserialize(oldSettings)).Zoom == 1,
                     "settings from older versions retain 100 percent scale");
