@@ -1,0 +1,4 @@
+interface:
+  display_name: "Pacific Clock · 太平洋时钟"
+  short_description: "在 Windows 桌面打开可置顶的太平洋时钟，自动切换夏令时，支持暖白与石墨主题"
+  default_prompt: "使用 $pacific-clock 在我的 Windows 桌面打开太平洋时间时钟。"

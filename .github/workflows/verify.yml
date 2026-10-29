@@ -1,0 +1,21 @@
+name: Verify Windows clock
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build from source
+        shell: pwsh
+        run: ./skills/pacific-clock/scripts/build.ps1 -OutputDirectory ./_build
+      - name: Verify timezone and window behavior
+        shell: pwsh
+        run: ./skills/pacific-clock/scripts/verify.ps1 -ExecutablePath ./_build/PacificClock.exe -ReportPath ./_build/verification.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: PacificClock-Windows
+          path: _build/
